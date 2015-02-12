@@ -1,0 +1,15 @@
+<pre>
+Objects
+{%if Data %}
+    --
+    {% for d in Data %}
+        {{d.value}} | {{d.cat_id}}
+    {% endfor %}
+    --
+{% endif %}
+</pre>
+<form method="post" action="/app/add_cat/">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>

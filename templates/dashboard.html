@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Toolshare{% endblock %}
+
+{% block content %}
+    {% load inbox %}
+    {% unread_inbox_count as unread_inbox_num %}
+    {% unread_checkout_count as unread_checkout_num %}
+
+    {% include "navigation.html" %}
+
+    <div class="container">
+        <div class="col-lg-12">
+            <!-- Jumbotron Header -->
+            <header class="jumbotron hero-spacer">
+                <h1>Welcome Back, {{ user.get_username }}!</h1>
+                <p>We missed you!  You last logged in on {{ user.last_login }}</p>
+
+            </header>
+        </div>
+        {% include "messages.html" %}
+        <div class="col-lg-12">
+
+        {% if My_Tools %}
+                {% if My_Tools|length == 1 %}
+                    <a href="#" class="list-group-item">
+                        You currently own <b>{{ My_Tools|length }}</b> tool.</a>
+                {% else %}
+                    <a href="#" class="list-group-item">
+                        You currently own <b>{{ My_Tools|length }}</b> tools.</a>
+                {% endif %}
+
+                {% if My_Out_Tools|length == 0 %}
+                        <p class="list-group-item"> {{ My_Out_Tools |length }} of your tools are currently out.</p>
+                {% else %}
+                    <a href="#" class="list-group-item">
+                        <b>{{ My_Out_Tools |length }}</b> of your tools are currently out.
+                    </a>
+                {% endif %}
+            {% else %}
+                <p class="list-group-item">You currently own 0 tools.</p>
+                <p class="list-group-item">0 of your tools are currently out.</p>
+            {% endif %}
+            <br />
+
+            {% if unread_inbox_num == 1  %}
+                <a href="{% url 'unread_inbox_notif' %}" class="list-group-item">
+                    You currently have <b>{{ unread_inbox_num }}</b> unread message.</a>
+            {% elif unread_inbox_num > 1 %}
+                <a href="{% url 'unread_inbox_notif' %}" class="list-group-item">
+                    You currently have <b>{{ unread_inbox_num }}</b> unread messages.</a>
+            {% else %}
+                <p class="list-group-item">You currently have 0 unread messages.</p>
+            {% endif %}
+
+            {% if unread_checkout_num == 1  %}
+                <a href="{% url 'unread_checkout_notif' %}" class="list-group-item">
+                    You currently have <b>{{ unread_checkout_num }}</b> unread requests.</a>
+            {% elif unread_inbox_num > 1 %}
+                <a href="{% url 'unread_checkout_notif' %}" class="list-group-item">
+                    You currently have <b>{{ unread_checkout_num }}</b> unread requests.</a>
+            {% else %}
+                <p class="list-group-item">You currently have 0 unread requests.</p>
+            {% endif %}
+            <br />
+
+        {% if Tool_Stats%}
+        {% include "tool_stat_carousel.html" %}
+        {% endif %}
+
+        {% if User_Stats%}
+        {% include "User_stat_carousel.html" %}
+        {% endif %}
+        <br/>
+        <br/><br />
+        </div>
+    </div>
+
+
+{% endblock %}
+
+

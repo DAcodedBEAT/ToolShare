@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ Title }}{% endblock %}
+
+{% block content %}
+    {% include "navigation.html" %}
+<div class="container">
+	<div class="col-lg-7">
+
+		{% include "messages.html" %}
+
+		<form class="form-signin" role="form" method="post" enctype="multipart/form-data">
+			<h2 class="form-signin-heading">Add a Tool</h2>
+
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+		</form>
+
+	</div>
+</div>
+{% endblock %}
+
+

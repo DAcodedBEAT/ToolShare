@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load get_range %}
+{% block title %} {{ Tool.title }} - ToolShare {% endblock %}
+
+{% block content %}
+
+{% include "navigation.html" %}
+
+    {% if Tool %}
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <h3> <a href="#">{{ Tool.title }}</a> </h3>
+                <p class="lead">Tool Actions</p>
+
+                {% include "messages.html" %}
+
+                <div class="list-group">
+                    {% if Tool.status == "OUT" %}
+                        <a href="/app/checkout/{{ Tool.tid }}" class="list-group-item active">Check-in</a>
+                    {% else %}
+                        <a href="/app/checkout/{{ Tool.tid }}" class="list-group-item active">Checkout</a>
+                    {% endif %}
+                    <a href="#" class="list-group-item">Reserve</a>
+                    <a href="#" class="list-group-item">Flag</a>
+                    <br>
+                    {%  if Tool.owner == request.user %}
+                        <p class="details"><em>Owner Actions</em></p>
+                            <a href="{% url 'edit_tool' Tool.tid %}" class="list-group-item">Edit Tool</a>
+                            <a href="{% url 'confirm_delete_tool' Tool.tid %}" class="list-group-item">Delete Tool</a>
+
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+            <div class="col-md-9">
+
+                <div class="thumbnail">
+                    {% if Tool.pic %}
+                        <img class="img-responsive"
+                             src="/a/{{ Tool.pic.url }}"
+                             style="max-width:800px; max-height:300px;"
+                             alt="{{Tool.title}}">
+                    {% else %}
+                        {# <img class="img-responsive" src="http://placehold.it/800x300" alt=""> #}
+                        <img src="/app/static/images/default_tool.png"
+                             style="max-width:800px; max-height:300px;"
+                             alt="Default Tool Image">
+                    {% endif %}
+                    <div class="caption-full">
+                        <h4 class="pull-right"></h4>
+                        <h4><a href="#">{{ Tool.title }}</a></h4>
+
+                        <p>Tool ID: {{ Tool.tid }}</p>
+                        <p>Owner:
+                        {% if Tool.owner == request.user %}
+                            <a href="{% url 'my_account' %}"> {{ Tool.owner }} </a> (me)
+                        {% else %}
+                            <a href="{% url 'view_user' Tool.owner %}"> {{ Tool.owner }} </a>
+                        {% endif %}
+                        </p>
+                        <p>Location: <a href="/app/browse/?location={{Tool.location.loc_id}}">{{ Tool.location }}</a></p>
+                        <p>Category: <a href="/app/browse/?cat_id={{Tool.category.cat_id}}">{{ Tool.category }}</a></p></p>
+                        <p>Tool status: <em>{{ Tool.status|lower|capfirst }}</em></p>
+                        <p style="word-wrap: break-word">Description: {{Tool.description }}</p>
+                    <br/>
+                        <h5>Share This Tool!</h5>
+                        <!--TWITTER SHARE BUTTON-->
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-hashtags="ToolShare" data-dnt="true">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+                        <!--GOOGLE +1 BUTTON-->
+                        <script src="https://apis.google.com/js/platform.js" async defer></script>
+                        <div class="g-plusone" data-size="medium"></div>
+                    </div>
+                <br/><br/>
+                    <div class="ratings">
+
+                        <p class="pull-right">
+                            {% if CheckIns|length == 0 %}There are no reviews.
+                            {% else %}{{ CheckIns|length }} reviews
+                            {% endif %}</p>
+
+                        {% if Tool.rating == 0 %}
+                            <p>There are no ratings to show.</p>
+                        {% else %}
+                            <p>
+                            {% for val in rating_stars %}
+                                {% if val == True %}
+                                    <span class="glyphicon glyphicon-star"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-star-empty"></span>
+                                {% endif %}
+                            {% endfor %}
+                            {{ Tool.rating }} out of 5 stars.
+                        {% endif %}
+                        </p>
+                    </div>
+                <br/>
+                    <h4>Reviews</h4>
+                    <div>
+                        {% for curr_check in CheckIns %}
+                            <div class="well">
+                            <div class="ratings">
+                                {% for i in 5|get_range %}
+                                    {% if i < curr_check.rating %}
+                                        <span class="glyphicon glyphicon-star"></span>
+                                    {% else %}
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    {% endif %}
+                                {% endfor %} {{ curr_check.rating }} out of 5 stars.
+                            </div>
+                                {% if curr_check.review %}
+                                    {{ curr_check.review }}
+                                {% else %}
+                                    (there is no review)
+                                {% endif %}
+                            </div><br />
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+

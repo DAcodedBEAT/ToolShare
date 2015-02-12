@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Browse - ToolShare{% endblock %}
+
+{% block content %}
+    {% include "navigation.html" %}
+
+    <div class="container">
+    <div class="row">
+
+            <div class="col-md-3">
+                <p class="lead">Browse Tools</p>
+
+                {% include "messages.html" %}
+                <div class="list-group">
+					<a href="{% url 'add_tool' %}" class="list-group-item">Add Tool</a>
+                </div>
+                <!--
+                Moved it to a form, so we can get the other options to work with it.
+                <div class="list-group">
+                    {% if Catgs %}
+                        {% for cat in Catgs %}
+                            <a href="/app/browse?cat_id={{cat.cat_id}}" class="list-group-item">{{cat}}</a>
+                        {% endfor %}
+                    {% endif %}
+                </div>-->
+
+                <div class="list-group">
+                    <h3>Filter</h3>
+                    <script type="text/javascript">
+                        function valInput(el){
+                            if(isNaN(el.value)) {
+                                alert("Invalid input");
+                            }
+                        }
+                        document.getElementById('').addEventListener('onblur', valInput(this))
+                    </script>
+                    <form method="get">
+                        {{ MForm.as_p }}
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+
+                <div class="row">
+                    {% if Tools %}
+                        {% for Tool in Tools %}
+                            <div class="col-sm-4 col-lg-4 col-md-4" >
+                                <div class="thumbnail">
+                                {% if Tool.0.pic %}
+                                    <img class="img-responsive"
+                                        src="/a/{{ Tool.0.pic.url }}"
+                                        style="max-width:320px;
+                                        max-height:150px;"
+                                        alt="{{Tool.0.title}}">
+                                {% else %}
+                                    <img src="/app/static/images/default_tool.png"
+                                        style="border: 0px solid #000; max-width:320px; max-height:150px;"
+                                        alt ="Default Tool">
+                                    {% endif %}
+                                    <div class="caption">
+                                        {% if Tool.0.status == "OUT" %}
+                                        <span style="display: block; color: white; background: red; text-align: center">Checked out.</span>
+                                        {% endif %}
+                                        <h5 class="pull-right">{{ Tool.1 }}mi</h5>
+                                        <h4><a href="/app/tools/{{ Tool.0.tid }}/">{{ Tool.0.title }}</a>
+                                        </h4>
+                                        <p>{{ Tool.0.description | truncatechars:"30" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% else %}
+                            <h3>No tools to show!</h3>
+                    {% endif %}
+                </div>
+
+            </div>
+    </div></div>
+
+{% endblock %}

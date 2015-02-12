@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to ToolShare!{% endblock %}
+
+{% block content %}
+    {% include "navigation.html" %}
+
+    <div class="container">
+        <div class="col-lg-12">
+            <!-- Jumbotron Header -->
+            <header class="jumbotron hero-spacer">
+                <h1>A Warm Welcome!</h1>
+                <p>ToolShare is intended to improve communities by providing an easy mechanism for sharing items between neighbors.</p>
+                <p><a href="/a/login" class="btn btn-primary btn-large">Login!</a><a href="/a/register" class="btn btn-primary btn-large">Register</a>
+                </p>
+            </header>
+        </div>
+        <div class="col-lg-12">
+        {% include "messages.html" %}
+        </div>
+        <div class="col-lg-12">
+        <p>This implementation of ToolShare was created by <strong><em>Team #SWEG</em></strong>.
+            The works of Team #SWEG on this project are solely their own, unless specified otherwise.</p>
+        <br />
+        <p>Contributors to Team #SWEG's ToolShare include:</p>
+        <ul><li>Colum McGaley</li><li>Arun Philip</li><li>Allen Liu</li><li>Joe Pastoressa</li></ul>
+        </div>
+    </div>
+{% endblock %}
+
+

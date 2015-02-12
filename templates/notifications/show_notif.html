@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ notification.title }} - {{ notification.recipient.username }} - ToolShare{% endblock %}
+{% block content %}
+
+{% load inbox %}
+{% load tz %}
+{% inbox_count as inbox_num %}
+{% unread_inbox_count as unread_inbox_num %}
+{% unread_checkout_count as unread_checkout_num %}
+{% outbox_count as outbox_num %}
+
+    {% include "navigation.html" %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <p class="lead" style="word-wrap: break-word">{{ notification.title|truncatechars:50 }}</p>
+                <p class="caption">{{ notification.recipient.username }} - ToolShare</p>
+                {% include "messages.html" %}
+            <br />
+                <a href="{% url 'compose_notif' %}" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Compose Notification</a>
+                <br /><br/>
+
+                <div class="list-group">
+                    <a href="{% url 'inbox_notif' %}"
+                       class="list-group-item {% if request.get_full_path == inbox_url %}active{% endif %}">Inbox
+                        <span class="badge" style="float: right">{{ unread_inbox_num }}</span></a>
+                    <a href="{% url 'checkout_inbox_notif' %}"
+                       class="list-group-item {% if request.get_full_path == checkout_inbox_url %}active{% endif %}">
+                        Checkout Requests <span class="badge" style="float: right">{{ unread_checkout_num }}</span></a>
+                    <a href="{% url 'sent_notif' %}"
+                       class="list-group-item {% if request.get_full_path == sent_url %}active{% endif %}">Sent
+                        <span class="badge" style="float: right">{{ outbox_num }}</span></a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <p style="word-wrap: break-word">Subject: <b>{{ notification.title }}</b></p>
+                        <p style="word-wrap: break-word">Recipient:
+                        {% if notification.recipient == request.user %}
+                            <a href="{% url 'my_account' %}">
+                                {{ notification.recipient.first_name }} {{ notification.recipient.last_name }}
+                                ({{notification.recipient.username}})</a>
+                        {% else %}
+                            <a href="{% url 'view_user' notification.recipient %}">
+                                {{ notification.recipient.first_name }} {{ notification.recipient.last_name }}
+                                ({{notification.recipient.username}})</a>
+                        {% endif %}</p>
+                        <p style="word-wrap: break-word">Sender:
+                            {% if notification.sender %}
+                                {% if notification.sender == request.user %}
+                                    <a href="{% url 'my_account' %}">
+                                        {{ notification.sender.first_name }} {{ notification.sender.last_name }}
+                                        ({{ notification.sender.username }})</a>
+                                {% else %}
+                                    <a href="{% url 'view_user' notification.sender %}">
+                                        {{ notification.sender.first_name }} {{ notification.sender.last_name }}
+                                        ({{ notification.sender.username }})</a>
+                                {% endif %}
+                            {% else %}
+                                ToolShare System
+                            {% endif %}</p>
+                        <p class="small"style="word-wrap: break-word"><em>
+                            Sent on: {{ notification.sent_date}}
+                        </em></p>
+                    </div>
+                    <div class="panel-body" style="word-wrap: break-word">Message: {{ notification.message|linebreaks }}</div>
+                    {% if notification.checkout %}
+                        <hr>
+                        <div class="panel-body">
+                            <a href="{% url 'approve_checkout' notification.id %}" style="word-wrap: break-word">
+                                Approve checkout {{ notification.checkout.cid }}?</a>
+                            <a href="{% url 'decline_checkout' notification.id %}" style="word-wrap: break-word">
+                                Decline checkout {{ notification.checkout.cid }}?</a>
+                            <a href="{% url 'modify_checkout' notification.id %}" style="word-wrap: break-word">
+                                Modify checkout {{ notification.checkout.cid }}?</a>
+                        </div>
+                    {% endif %}
+                    <div class="panel-footer">
+                    {% if notification.recipient == request.user %}
+                        {% if notification.viewed == False %}
+                        <a href="{% url 'viewed_notif' notification.id %}" style="word-wrap: break-word">
+                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Mark as Read</a>
+                        {% else %}
+                         <a href="{% url 'not_viewed_notif' notification.id %}" style="word-wrap: break-word">
+                            <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Mark as Unread</a>
+                        {% endif %}
+                            <span style="float: right">
+                                <a href="{% url 'delete_notif' notification.id %}" style="word-wrap: break-word">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    Delete Notification</a>
+                                </span>
+                    {% else %}
+                        <p style="text-align: center; word-wrap: break-word"><em>
+                            (The recipient of this message has not addressed this notification yet.)</em></p>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

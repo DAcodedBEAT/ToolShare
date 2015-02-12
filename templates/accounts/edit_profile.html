@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %} {{ Title }} - ToolShare{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ Title }}</h1>
+        <h4>Change your profile settings here.</h4>
+        {% if Title == "Create Profile" %}
+        <p>For new users, it is <strong>required that you add a location.</strong></p>
+        {% endif %}
+
+	<div class="col-lg-7">
+    {% include "messages.html" %}
+        <!--{% if profile_form.errors %}
+	<div class="alert alert-error">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		{% for field in profile_form %}
+			{% if field.errors %}
+			<li>{{ field.label }}: {{ field.errors|striptags }}</li>
+			{% endif %}
+		{% endfor %}
+	</div>
+    {% endif %}-->
+
+
+        <div id="properties" class="row">
+            <div class="col-md-10">
+                <form class="form-signin" role="form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ profile_form.as_p }}
+                    {% if Title == "Create Profile" %}
+                        {{ loc_form.as_p }}
+                    {% endif %}
+			        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" />
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

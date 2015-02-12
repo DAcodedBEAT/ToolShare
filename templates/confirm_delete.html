@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ Title }}{% endblock %}
+
+{% block content %}
+    {% include "navigation.html" %}
+<div class="container">
+	<div class="col-lg-7">
+
+		{% include "messages.html" %}
+
+        <h3 class="text-center">Are you sure you want to delete Tool "{{ Tool.title }}"?</h3>
+        <h5 class="text-center"><em>(Tool ID: {{ Tool.tid }})</em></h5>
+        <p class="text-center">
+            <a href="{% url 'view_tool' Tool.tid %}" class="btn btn-default" role="button">No</a>
+            <a href="{% url 'delete_tool' Tool.tid %}" class="btn btn-primary" role="button">Yes</a>
+        </p>
+
+	</div>
+</div>
+{% endblock %}
+
+

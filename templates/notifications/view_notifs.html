@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ Page_Title }} - ToolShare{% endblock %}
+{% block content %}
+{% load inbox %}
+
+{% inbox_count as inbox_num %}
+{% unread_inbox_count as unread_inbox_num %}
+{% unread_checkout_count as unread_checkout_num %}
+{% outbox_count as outbox_num %}
+{% url 'inbox_notif' as inbox_url %}
+{% url 'unread_inbox_notif' as unread_inbox_url %}
+{% url 'checkout_inbox_notif' as checkout_inbox_url %}
+{% url 'unread_checkout_notif' as unread_checkout_url %}
+{% url 'sent_notif' as sent_url %}
+
+    {% include "navigation.html" %}
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-3">
+                <p class="lead">{{ Page_Title }} Notifications</p>
+                <p class="caption">{{ request.user.username }} - ToolShare</p>
+                {% include "messages.html" %}
+            <br />
+                <a href="{% url 'compose_notif' %}" class="btn btn-primary" type="button">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Compose Notification</a>
+                <br /><br/>
+                <div class="list-group">
+                    <a href="{{ inbox_url }}"
+                       class="list-group-item {% if request.get_full_path == inbox_url %}active{% endif %}">Inbox
+                        <span class="badge" style="float: right">{{ unread_inbox_num }}</span></a>
+                    <a href="{{ checkout_inbox_url }}"
+                       class="list-group-item {% if request.get_full_path == checkout_inbox_url %}active{% endif %}">
+                        Checkout Requests <span class="badge" style="float: right">{{ unread_checkout_num }}</span></a>
+                    <a href="{{ sent_url }}"
+                       class="list-group-item {% if request.get_full_path == sent_url %}active{% endif %}">Sent
+                        <span class="badge" style="float: right">{{ outbox_num }}</span></a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="list-group">
+                    {% if notif_list.count > 0 %}
+                        <p class="list-group-item"><em style="text-decoration: underline">Notification Title</em>
+                            <span style="float: right">
+                                <em style="text-decoration: underline">Notification Message</em></span></p>
+                        <br/>
+                        <!--List Notifications-->
+                        {% for notif in notif_list %}
+                            <a href="{% url 'show_notif' notif.id%}" class="list-group-item">
+                                {% if request.get_full_path != sent_url %}
+                                    {% if notif.viewed == False %}
+                                        <strong>{{ notif.title|truncatechars:50 }}</strong>
+                                    {% else %}
+                                        {{ notif.title|truncatechars:50 }}
+                                    {% endif %}
+                                {% else %}
+                                    {{ notif.title|truncatechars:50 }}
+                                {% endif %}
+                                <span style="float: right">{{notif.message|truncatechars:50}}</span></a>
+                        {% endfor %}
+                    {% else %}
+                        <h4>There are no {{ Page_Title }} Notifications. Congrats!</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

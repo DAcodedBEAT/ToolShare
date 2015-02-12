@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Register - ToolShare{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div class="col-lg-7">
+
+    {% include "messages.html" %}
+
+    <!--{% if user_form.errors %}
+	<div class="alert alert-error">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		{% for field in user_form %}
+			{% if field.errors %}
+			<li>{{ field.label }}: {{ field.errors|striptags }}</li>
+			{% endif %}
+		{% endfor %}
+	</div>
+    {% endif %}-->
+
+		<form class="form-signin" role="form" method="post">
+			<h2 class="form-signin-heading">Tool Share Registration</h2>
+
+			{% csrf_token %}
+			{{ user_form.as_p }}
+
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up!</button>
+			<a href="{% url 'login' %}" >Already have an account? Login here!</a>
+		</form>
+
+	</div>
+</div>
+{% endblock %}
+
+

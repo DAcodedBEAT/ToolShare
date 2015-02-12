@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ Page_Title }} - ToolShare{% endblock %}
+{% block content %}
+{% load inbox %}
+{% unread_inbox_count as unread_inbox_num %}
+{% unread_checkout_count as unread_checkout_num %}
+{% outbox_count as outbox_num %}
+{% url 'inbox_notif' as inbox_url %}
+{% url 'unread_notif' as unread_url %}
+{% url 'sent_notif' as sent_url %}
+
+    {% include "navigation.html" %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <p class="lead">Compose a Notification</p>
+                {% include "messages.html" %}
+            <br />
+                <button type="button" class="btn btn-primary" disabled="disabled">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Compose Notification</button>
+                <br /><br/>
+
+                <div class="list-group">
+                    <a href="{% url 'inbox_notif' %}"
+                       class="list-group-item ">Inbox
+                        <span class="badge" style="float: right">{{ unread_inbox_num }}</span></a>
+                    <a href="{% url 'checkout_inbox_notif' %}"
+                       class="list-group-item ">
+                        Checkout Requests <span class="badge" style="float: right">{{ unread_checkout_num }}</span></a>
+                    <a href="{% url 'sent_notif' %}"
+                       class="list-group-item ">Sent
+                        <span class="badge" style="float: right">{{ outbox_num }}</span></a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <form class="form-horizontal" role="form" method="post">
+			        {% csrf_token %}
+			        {{ compose_form.as_p }}
+			        <button class="btn btn-lg btn-primary btn-block" type="submit">Send!</button>
+		</form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

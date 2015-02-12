@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Locations - ToolShare{% endblock %}
+
+{% block content %}
+    {% include "navigation.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <h1 class="text-center login-title">ToolShare</h1>
+
+			{% include "messages.html" %}
+
+            <div class="account-wall">
+                <form class="form-signin" method="post">
+					{% csrf_token %}
+
+					{{ form.as_p }}
+					<button class="btn btn-lg btn-primary btn-block" type="submit">Add Location</button>
+
+                </form>
+            </div>
+            <table style="width: 100%">
+                <tr style="margin-bottom: 15px;">
+                    <td>Location</td>
+                    <td>Actions</td>
+                </tr>
+                {% if locations %}
+                    {% for location in locations %}
+                    <tr>
+                        <td>{{location}}</td>
+                        <td><a href="?loc_id={{location.loc_id}}&action=delete">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <p>You need to have more than one address</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
